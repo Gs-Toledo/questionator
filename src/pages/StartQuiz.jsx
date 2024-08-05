@@ -1,16 +1,16 @@
 import React from "react"
-import logo from '../assets/logo.svg';
+import logoQuiz from '../assets/quiz-logo.jpg'
 
 
 export function StartQuiz() {
 
     return (
         <div>
-            <img src={logo} className="App-logo" alt="logo" />
+            <img src={logoQuiz} className="Quiz-logo" alt="logo" />
             <p>
               Click to Begin the Quiz
             </p>
-            <button className="btn btn-start">Start</button>
+            
         </div>
 
     )

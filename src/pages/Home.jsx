@@ -1,8 +1,23 @@
-import React from "react"
+import React, { useState } from "react"
 import Questions from "./Questions";
 import { StartQuiz } from "./StartQuiz";
 
+
+function ShowQuestions() {
+  return <div><Questions /></div>
+}
+
+function ShowStartQuiz() {
+  return <div><StartQuiz /></div>
+}
+
 export default function Home()  {
+
+  const [showQuestionsComponent, setshowComponentQuestions] = useState(true);
+
+  const startQuizQuestions = () => {
+    setshowComponentQuestions(!showQuestionsComponent);
+  };
 
     return (
         <div className="App">
@@ -13,15 +28,18 @@ export default function Home()  {
           </nav>
         </header>
         
-        <body className="App-body">
+        <section className="App-body">
 
           <div className="app-box">
 
-            <StartQuiz />
+          {showQuestionsComponent ?  <ShowStartQuiz /> : <ShowQuestions />}
+          <button 
+            className={`btn ${showQuestionsComponent ? 'd-none' : ''}`} 
+            onClick={startQuizQuestions}>Start</button>
 
           </div>
 
-        </body>
+        </section>
         
         </div>
     )
