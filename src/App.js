@@ -1,20 +1,15 @@
-import './App.css';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import './assets/styles/App.css';
 import Home from './pages/Home';
+import { useRoutes } from 'react-router-dom';
+import Questions from './pages/Questions';
 
-function App() {
 
-<Router>
-      <div>
-          <Route path="/" component={Home} />
+export default function App() {
 
-      </div>
-</Router>
+  const routes = useRoutes([
+    { path: '/', element: <Home /> },
+    { path: '/Questions', element: <Questions /> }
 
-  return (
-    <p></p>
-  )
-
+  ]);
+  return routes
 }
-
-export default App;

@@ -1,7 +1,9 @@
 import React from "react"
-import logo from '../assets/logo.svg';
+import Questions from "./Questions";
+import { StartQuiz } from "./StartQuiz";
 
 export default function Home()  {
+
     return (
         <div className="App">
 
@@ -12,13 +14,13 @@ export default function Home()  {
         </header>
         
         <body className="App-body">
+
           <div className="app-box">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              Click to Begin the Quiz
-            </p>
-            <button className="btn btn-start" >Start</button>
+
+            <StartQuiz />
+
           </div>
+
         </body>
         
         </div>
