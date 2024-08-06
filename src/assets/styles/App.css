@@ -75,6 +75,10 @@ a:hover{
   pointer-events: all;
 }
 
+.btn.btn-answer {
+  margin-top: 2rem;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

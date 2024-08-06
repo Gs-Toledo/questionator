@@ -1,0 +1,89 @@
+{
+    "questions": [
+            {
+                "id":1,
+                "type":"One-choice",
+                "question_text_en": "What's the capital of Brazil?",
+                "question_text_pt-br": "Qual a capital do Brasil?",
+                "answers_en": [
+                    {
+                        "answer_text": "Brasília",
+                        "isCorrect": true
+                    },
+                    {
+                        "answer_text": "Rio De Janeiro",
+                        "isCorrect": false
+                    }
+                ],
+                "answer_pt-br": [
+                    {
+                        "answer_text": "Brasília",
+                        "isCorrect": true
+                    },
+                    {
+                        "answer_text": "Rio De Janeiro",
+                        "isCorrect": false
+                    }
+                ]
+
+            },
+            {
+                "id": 6,
+                "type": "Multiple-choice",
+                "question_text_en": "Which of the following are programming languages?",
+                "question_text_pt-br": "Quais das seguintes são linguagens de programação?",
+                "answers_en": [
+                    {
+                        "answer_text": "Python",
+                        "isCorrect": true
+                    },
+                    {
+                        "answer_text": "HTML",
+                        "isCorrect": false
+                    },
+                    {
+                        "answer_text": "CSS",
+                        "isCorrect": false
+                    },
+                    {
+                        "answer_text": "Java",
+                        "isCorrect": true
+                    }
+                ],
+                "answer_pt-br": [
+                    {
+                        "answer_text": "Python",
+                        "isCorrect": true
+                    },
+                    {
+                        "answer_text": "HTML",
+                        "isCorrect": true
+                    },
+                    {
+                        "answer_text": "CSS",
+                        "isCorrect": false
+                    },
+                    {
+                        "answer_text": "Java",
+                        "isCorrect": true
+                    }
+                ]
+            },
+            {
+                "id": 7,
+                "type": "Input",
+                "question_text_en": "What is the capital of France?",
+                "question_text_pt-br": "Qual é a capital da França?",
+                "correct_answer_en": "Paris",
+                "correct_answer_pt-br": "Paris"
+            },
+            {
+                "id": 8,
+                "type": "Input",
+                "question_text_en": "Who is known as the father of computers?",
+                "question_text_pt-br": "Quem é conhecido como o pai dos computadores?",
+                "correct_answer_en": "Charles Babbage",
+                "correct_answer_pt-br": "Charles Babbage"
+            }
+        ]
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 
 export default function Base({children}) {
@@ -7,7 +8,7 @@ export default function Base({children}) {
 
         <header className='app-header'>
           <nav>
-            <a href="/">Home</a> 
+            <Link to="/">Home</Link>
           </nav>
         </header>
         
