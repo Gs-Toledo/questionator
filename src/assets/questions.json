@@ -74,16 +74,32 @@
                 "type": "Input",
                 "question_text_en": "What is the capital of France?",
                 "question_text_pt-br": "Qual é a capital da França?",
-                "correct_answer_en": "Paris",
-                "correct_answer_pt-br": "Paris"
+                "answers_en": [{
+                    "answer_text":"Paris",
+                    "isCorrect": true
+                }
+                ],
+                "answers_pt-br": [{
+                    "answer_text":"Paris",
+                    "isCorrect": true
+                }
+                ]
             },
             {
                 "id": 8,
                 "type": "Input",
-                "question_text_en": "Who is known as the father of computers?",
-                "question_text_pt-br": "Quem é conhecido como o pai dos computadores?",
-                "correct_answer_en": "Charles Babbage",
-                "correct_answer_pt-br": "Charles Babbage"
+                "question_text_en": "Who is known as the father of computer Science?",
+                "question_text_pt-br": "Quem é conhecido como o pai da ciência da computação?",
+                "answers_en": [{
+                    "answer_text":"Alan Turing",
+                    "isCorrect": true
+                }
+                ],
+                "answers_pt-br": [{
+                    "answer_text":"Alan Turing",
+                    "isCorrect": true
+                }
+                ]
             }
         ]
 }

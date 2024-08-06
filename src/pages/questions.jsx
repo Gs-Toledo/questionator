@@ -4,14 +4,17 @@ import ProgressBar from "./ProgressBar";
 import questionsData from '../assets/questions.json';
 
 export default function Questions() {
+
   const [questions] = useState(questionsData.questions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [steps, setSteps] = useState(questions.map(() => ({ correct: null })));
   const [selectedAnswer, setSelectedAnswer] = useState([]);
   const [inputAnswer, setInputAnswer] = useState("");
+  let [finalScore, setFinalScore] = useState(0)
 
   const handleAnswerSelect = (answerIndex) => {
     if (questions[currentQuestionIndex].type === "Multiple-choice") {
+      
       setSelectedAnswer(prev => 
         prev.includes(answerIndex) 
         ? prev.filter(index => index !== answerIndex) 
@@ -26,19 +29,27 @@ export default function Questions() {
     setInputAnswer(e.target.value);
   };
 
+  const updateFinalScore = (isCorrect) => {
+    if (isCorrect) {
+      setFinalScore(prevScore => prevScore + 1);
+    }
+  };
   const handleSubmit = () => {
     const currentQuestion = questions[currentQuestionIndex];
     let isCorrect = false;
 
     if (currentQuestion.type === "One-choice" || currentQuestion.type === "Multiple-choice") {
+
       const correctAnswers = currentQuestion.answers_en
         .map((answer, index) => answer.isCorrect ? index : null)
         .filter(index => index !== null);
 
       isCorrect = JSON.stringify(correctAnswers) === JSON.stringify(selectedAnswer.sort());
-    } else if (currentQuestion.type === "Input questions") {
+      
+    } else if (currentQuestion.type === "Input") {
+      
       isCorrect = currentQuestion.answers_en.some(answer => 
-        answer.answer_text.toLowerCase() === inputAnswer.trim().toLowerCase()
+        answer.answer_text.toLowerCase().trim() === inputAnswer.trim().toLowerCase()
       );
     }
 
@@ -48,9 +59,12 @@ export default function Questions() {
       )
     );
 
+    updateFinalScore(isCorrect)
     setSelectedAnswer([]);
     setInputAnswer("");
     setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+
+
   };
 
   if (currentQuestionIndex >= questions.length) {
@@ -58,7 +72,10 @@ export default function Questions() {
       <Base>
         <div>
           <p>You have completed all the questions!</p>
+            
           <ProgressBar steps={steps} />
+
+          <p>Result: {finalScore}/{steps.length}</p>
         </div>
       </Base>
     );
