@@ -1,14 +1,16 @@
 import React from "react"
+import Base from "./Base"
 
 export default function Questions()  {
     return (
         
-
-      <div>
-        <p>
-          Questions
-        </p>
-      </div>
+      <Base>
+        <div>
+          <p>
+            Questions
+          </p>
+        </div>
+      </Base>
 
   
         

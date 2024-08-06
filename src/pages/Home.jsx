@@ -1,46 +1,25 @@
-import React, { useState } from "react"
-import Questions from "./Questions";
-import { StartQuiz } from "./StartQuiz";
+import React from "react"
+import Base from "./Base"
+import logoQuiz from '../assets/quiz-logo.jpg'
+import { Link } from 'react-router-dom';
 
-
-function ShowQuestions() {
-  return <div><Questions /></div>
-}
-
-function ShowStartQuiz() {
-  return <div><StartQuiz /></div>
-}
 
 export default function Home()  {
 
-  const [showQuestionsComponent, setshowComponentQuestions] = useState(true);
-
-  const startQuizQuestions = () => {
-    setshowComponentQuestions(!showQuestionsComponent);
-  };
-
     return (
-        <div className="App">
+        <Base>
+          <div>
+            <img src={logoQuiz} className="Quiz-logo" alt="logo" />
+            <p>
+              Click to Begin the Quiz
+            </p>
 
-        <header className='app-header'>
-          <nav>
-            <a href="/">Home</a> 
-          </nav>
-        </header>
-        
-        <section className="App-body">
-
-          <div className="app-box">
-
-          {showQuestionsComponent ?  <ShowStartQuiz /> : <ShowQuestions />}
-          <button 
-            className={`btn ${showQuestionsComponent ? 'd-none' : ''}`} 
-            onClick={startQuizQuestions}>Start</button>
-
+            <button 
+            className="btn" >
+              <Link to="/questions"> Start</Link>
+            </button>
+            
           </div>
-
-        </section>
-        
-        </div>
+        </Base>
     )
 }
