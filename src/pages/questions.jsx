@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Base from "./Base";
 import ProgressBar from "./ProgressBar";
 import questionsData from '../assets/questions.json';
+import { Link } from "react-router-dom";
 
 export default function Questions() {
 
@@ -14,7 +15,7 @@ export default function Questions() {
 
   const handleAnswerSelect = (answerIndex) => {
     if (questions[currentQuestionIndex].type === "Multiple-choice") {
-      
+
       setSelectedAnswer(prev => 
         prev.includes(answerIndex) 
         ? prev.filter(index => index !== answerIndex) 
@@ -76,6 +77,7 @@ export default function Questions() {
           <ProgressBar steps={steps} />
 
           <p>Result: {finalScore}/{steps.length}</p>
+          <button className="btn btn-answer"><Link to="/">Return to Home</Link></button>
         </div>
       </Base>
     );
