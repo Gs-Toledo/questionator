@@ -9,13 +9,13 @@ export default function Questions() {
   const [questions] = useState(questionsData.questions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [steps, setSteps] = useState(questions.map(() => ({ correct: null, scored: false })));
-  const [answers, setAnswers] = useState(questions.map(() => [])); // Stores selected answers for each question
-  const [inputAnswers, setInputAnswers] = useState(questions.map(() => "")); // Stores input answers for each question
+  const [answersCheckboxesAndRadios, setAnswersCheckboxesAndRadios] = useState(questions.map(() => [])); 
+  const [inputAnswers, setInputAnswers] = useState(questions.map(() => "")); 
   let [finalScore, setFinalScore] = useState(0);
 
   const handleAnswerSelect = (answerIndex) => {
     if (questions[currentQuestionIndex].type === "Multiple-choice") {
-      setAnswers(prevAnswers =>
+      setAnswersCheckboxesAndRadios(prevAnswers =>
         prevAnswers.map((ans, i) =>
           i === currentQuestionIndex
             ? (ans.includes(answerIndex)
@@ -25,7 +25,7 @@ export default function Questions() {
         )
       );
     } else {
-      setAnswers(prevAnswers =>
+      setAnswersCheckboxesAndRadios(prevAnswers =>
         prevAnswers.map((ans, i) =>
           i === currentQuestionIndex
             ? [answerIndex]
@@ -79,7 +79,7 @@ export default function Questions() {
         .map((answer, index) => answer.isCorrect ? index : null)
         .filter(index => index !== null);
 
-      isCorrect = JSON.stringify(correctAnswers) === JSON.stringify(answers[currentQuestionIndex].sort());
+      isCorrect = JSON.stringify(correctAnswers) === JSON.stringify(answersCheckboxesAndRadios[currentQuestionIndex].sort());
     } else if (currentQuestion.type === "Input") {
       isCorrect = currentQuestion.answers_en.some(answer =>
         answer.answer_text.toLowerCase().trim() === inputAnswers[currentQuestionIndex].trim().toLowerCase()
@@ -126,7 +126,7 @@ export default function Questions() {
         <Question
           currentQuestion={currentQuestion}
           questionIndex={currentQuestionIndex}
-          selectedAnswer={answers[currentQuestionIndex]}
+          selectedAnswer={answersCheckboxesAndRadios[currentQuestionIndex]}
           inputAnswer={inputAnswers[currentQuestionIndex]}
           handleAnswerSelect={handleAnswerSelect}
           handleInputChange={handleInputChange}
