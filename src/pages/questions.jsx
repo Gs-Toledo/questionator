@@ -1,35 +1,35 @@
 import React, { useState } from "react";
 import Base from "./Base";
 import ProgressBar from "./ProgressBar";
+import Question from "./Question";
 import questionsData from '../assets/questions.json';
 import { Link } from "react-router-dom";
 
 export default function Questions() {
   const [questions] = useState(questionsData.questions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [steps, setSteps] = useState(questions.map(() => ({ correct: null })));
-  const [answers, setAnswers] = useState(questions.map(() => [])); 
-  const [inputAnswers, setInputAnswers] = useState(questions.map(() => "")); 
-  
+  const [steps, setSteps] = useState(questions.map(() => ({ correct: null, scored: false })));
+  const [answers, setAnswers] = useState(questions.map(() => [])); // Stores selected answers for each question
+  const [inputAnswers, setInputAnswers] = useState(questions.map(() => "")); // Stores input answers for each question
   let [finalScore, setFinalScore] = useState(0);
 
   const handleAnswerSelect = (answerIndex) => {
     if (questions[currentQuestionIndex].type === "Multiple-choice") {
-      setAnswers(prevAnswers => 
-        prevAnswers.map((ans, i) => 
-          i === currentQuestionIndex 
-          ? (ans.includes(answerIndex) 
-              ? ans.filter(index => index !== answerIndex) 
-              : [...ans, answerIndex])
-          : ans
+      setAnswers(prevAnswers =>
+        prevAnswers.map((ans, i) =>
+          i === currentQuestionIndex
+            ? (ans.includes(answerIndex)
+                ? ans.filter(index => index !== answerIndex)
+                : [...ans, answerIndex])
+            : ans
         )
       );
     } else {
       setAnswers(prevAnswers =>
-        prevAnswers.map((ans, i) => 
-          i === currentQuestionIndex 
-          ? [answerIndex] 
-          : ans
+        prevAnswers.map((ans, i) =>
+          i === currentQuestionIndex
+            ? [answerIndex]
+            : ans
         )
       );
     }
@@ -45,9 +45,15 @@ export default function Questions() {
   };
 
   const updateFinalScore = (isCorrect) => {
-    if (isCorrect) {
-      setFinalScore(prevScore => prevScore + 1);
-    }
+    setFinalScore(prevScore => {
+      const currentStep = steps[currentQuestionIndex];
+      if (isCorrect && !currentStep.scored) {
+        return prevScore + 1;
+      } else if (!isCorrect && currentStep.correct && currentStep.scored) {
+        return prevScore - 1;
+      }
+      return prevScore;
+    });
   };
 
   const findNextUnansweredQuestionIndex = () => {
@@ -75,14 +81,14 @@ export default function Questions() {
 
       isCorrect = JSON.stringify(correctAnswers) === JSON.stringify(answers[currentQuestionIndex].sort());
     } else if (currentQuestion.type === "Input") {
-      isCorrect = currentQuestion.answers_en.some(answer => 
+      isCorrect = currentQuestion.answers_en.some(answer =>
         answer.answer_text.toLowerCase().trim() === inputAnswers[currentQuestionIndex].trim().toLowerCase()
       );
     }
 
     setSteps(prevSteps =>
       prevSteps.map((step, i) =>
-        i === currentQuestionIndex ? { ...step, correct: isCorrect } : step
+        i === currentQuestionIndex ? { ...step, correct: isCorrect, scored: step.scored || isCorrect } : step
       )
     );
 
@@ -117,35 +123,15 @@ export default function Questions() {
     <Base>
       <div>
         <ProgressBar steps={steps} onProgressClick={handleProgressClick} />
-        <p>{currentQuestionIndex + 1} - {currentQuestion.question_text_en}</p>
-        {currentQuestion.type === "One-choice" || currentQuestion.type === "Multiple-choice" ? (
-          currentQuestion.answers_en.map((answer, index) => (
-            <div key={index}>
-              <label>
-                <input
-                  type={currentQuestion.type === "One-choice" ? "radio" : "checkbox"}
-                  name="answer"
-                  checked={answers[currentQuestionIndex].includes(index)}
-                  onChange={() => handleAnswerSelect(index)}
-                />
-                {answer.answer_text}
-              </label>
-            </div>
-          ))
-        ) : (
-          <input
-            type="text"
-            value={inputAnswers[currentQuestionIndex]}
-            onChange={handleInputChange}
-          />
-        )}
-        <br />
-        <button 
-          onClick={handleSubmit} 
-          disabled={answers[currentQuestionIndex].length === 0 && inputAnswers[currentQuestionIndex] === ""}
-          className="btn btn-answer">
-          Submit
-        </button>
+        <Question
+          currentQuestion={currentQuestion}
+          questionIndex={currentQuestionIndex}
+          selectedAnswer={answers[currentQuestionIndex]}
+          inputAnswer={inputAnswers[currentQuestionIndex]}
+          handleAnswerSelect={handleAnswerSelect}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+        />
       </div>
     </Base>
   );
