@@ -8,24 +8,40 @@ export default function Questions() {
   const [questions] = useState(questionsData.questions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [steps, setSteps] = useState(questions.map(() => ({ correct: null })));
-  const [selectedAnswer, setSelectedAnswer] = useState([]);
-  const [inputAnswer, setInputAnswer] = useState("");
+  const [answers, setAnswers] = useState(questions.map(() => [])); 
+  const [inputAnswers, setInputAnswers] = useState(questions.map(() => "")); 
+  
   let [finalScore, setFinalScore] = useState(0);
 
   const handleAnswerSelect = (answerIndex) => {
     if (questions[currentQuestionIndex].type === "Multiple-choice") {
-      setSelectedAnswer(prev => 
-        prev.includes(answerIndex) 
-        ? prev.filter(index => index !== answerIndex) 
-        : [...prev, answerIndex]
+      setAnswers(prevAnswers => 
+        prevAnswers.map((ans, i) => 
+          i === currentQuestionIndex 
+          ? (ans.includes(answerIndex) 
+              ? ans.filter(index => index !== answerIndex) 
+              : [...ans, answerIndex])
+          : ans
+        )
       );
     } else {
-      setSelectedAnswer([answerIndex]);
+      setAnswers(prevAnswers =>
+        prevAnswers.map((ans, i) => 
+          i === currentQuestionIndex 
+          ? [answerIndex] 
+          : ans
+        )
+      );
     }
   };
 
   const handleInputChange = (e) => {
-    setInputAnswer(e.target.value);
+    const value = e.target.value;
+    setInputAnswers(prevInputAnswers =>
+      prevInputAnswers.map((ans, i) =>
+        i === currentQuestionIndex ? value : ans
+      )
+    );
   };
 
   const updateFinalScore = (isCorrect) => {
@@ -45,7 +61,7 @@ export default function Questions() {
         return i;
       }
     }
-    return -1; // All questions answered
+    return -1;
   };
 
   const handleSubmit = () => {
@@ -57,10 +73,10 @@ export default function Questions() {
         .map((answer, index) => answer.isCorrect ? index : null)
         .filter(index => index !== null);
 
-      isCorrect = JSON.stringify(correctAnswers) === JSON.stringify(selectedAnswer.sort());
+      isCorrect = JSON.stringify(correctAnswers) === JSON.stringify(answers[currentQuestionIndex].sort());
     } else if (currentQuestion.type === "Input") {
       isCorrect = currentQuestion.answers_en.some(answer => 
-        answer.answer_text.toLowerCase().trim() === inputAnswer.trim().toLowerCase()
+        answer.answer_text.toLowerCase().trim() === inputAnswers[currentQuestionIndex].trim().toLowerCase()
       );
     }
 
@@ -71,8 +87,6 @@ export default function Questions() {
     );
 
     updateFinalScore(isCorrect);
-    setSelectedAnswer([]);
-    setInputAnswer("");
 
     const nextIndex = findNextUnansweredQuestionIndex();
     if (nextIndex !== -1) {
@@ -111,7 +125,7 @@ export default function Questions() {
                 <input
                   type={currentQuestion.type === "One-choice" ? "radio" : "checkbox"}
                   name="answer"
-                  checked={selectedAnswer.includes(index)}
+                  checked={answers[currentQuestionIndex].includes(index)}
                   onChange={() => handleAnswerSelect(index)}
                 />
                 {answer.answer_text}
@@ -121,14 +135,14 @@ export default function Questions() {
         ) : (
           <input
             type="text"
-            value={inputAnswer}
+            value={inputAnswers[currentQuestionIndex]}
             onChange={handleInputChange}
           />
         )}
         <br />
         <button 
           onClick={handleSubmit} 
-          disabled={selectedAnswer.length === 0 && inputAnswer === ""}
+          disabled={answers[currentQuestionIndex].length === 0 && inputAnswers[currentQuestionIndex] === ""}
           className="btn btn-answer">
           Submit
         </button>
