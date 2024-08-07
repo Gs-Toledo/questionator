@@ -5,17 +5,15 @@ import questionsData from '../assets/questions.json';
 import { Link } from "react-router-dom";
 
 export default function Questions() {
-
   const [questions] = useState(questionsData.questions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [steps, setSteps] = useState(questions.map(() => ({ correct: null })));
   const [selectedAnswer, setSelectedAnswer] = useState([]);
   const [inputAnswer, setInputAnswer] = useState("");
-  let [finalScore, setFinalScore] = useState(0)
+  let [finalScore, setFinalScore] = useState(0);
 
   const handleAnswerSelect = (answerIndex) => {
     if (questions[currentQuestionIndex].type === "Multiple-choice") {
-
       setSelectedAnswer(prev => 
         prev.includes(answerIndex) 
         ? prev.filter(index => index !== answerIndex) 
@@ -35,20 +33,32 @@ export default function Questions() {
       setFinalScore(prevScore => prevScore + 1);
     }
   };
+
+  const findNextUnansweredQuestionIndex = () => {
+    for (let i = currentQuestionIndex + 1; i < steps.length; i++) {
+      if (steps[i].correct === null) {
+        return i;
+      }
+    }
+    for (let i = 0; i < currentQuestionIndex; i++) {
+      if (steps[i].correct === null) {
+        return i;
+      }
+    }
+    return -1; // All questions answered
+  };
+
   const handleSubmit = () => {
     const currentQuestion = questions[currentQuestionIndex];
     let isCorrect = false;
 
     if (currentQuestion.type === "One-choice" || currentQuestion.type === "Multiple-choice") {
-
       const correctAnswers = currentQuestion.answers_en
         .map((answer, index) => answer.isCorrect ? index : null)
         .filter(index => index !== null);
 
       isCorrect = JSON.stringify(correctAnswers) === JSON.stringify(selectedAnswer.sort());
-      
     } else if (currentQuestion.type === "Input") {
-      
       isCorrect = currentQuestion.answers_en.some(answer => 
         answer.answer_text.toLowerCase().trim() === inputAnswer.trim().toLowerCase()
       );
@@ -60,22 +70,26 @@ export default function Questions() {
       )
     );
 
-    updateFinalScore(isCorrect)
+    updateFinalScore(isCorrect);
     setSelectedAnswer([]);
     setInputAnswer("");
-    setCurrentQuestionIndex(prevIndex => prevIndex + 1);
 
-
+    const nextIndex = findNextUnansweredQuestionIndex();
+    if (nextIndex !== -1) {
+      setCurrentQuestionIndex(nextIndex);
+    }
   };
 
-  if (currentQuestionIndex >= questions.length) {
+  const handleProgressClick = (index) => {
+    setCurrentQuestionIndex(index);
+  };
+
+  if (steps.every(step => step.correct !== null)) {
     return (
       <Base>
         <div>
           <p>You have completed all the questions!</p>
-            
-          <ProgressBar steps={steps} />
-
+          <ProgressBar steps={steps} onProgressClick={handleProgressClick} />
           <p>Result: {finalScore}/{steps.length}</p>
           <button className="btn btn-answer"><Link to="/">Return to Home</Link></button>
         </div>
@@ -88,13 +102,10 @@ export default function Questions() {
   return (
     <Base>
       <div>
-        <ProgressBar steps={steps} />
-
-        <p>{currentQuestion.question_text_en}</p>
-
+        <ProgressBar steps={steps} onProgressClick={handleProgressClick} />
+        <p>{currentQuestionIndex + 1} - {currentQuestion.question_text_en}</p>
         {currentQuestion.type === "One-choice" || currentQuestion.type === "Multiple-choice" ? (
           currentQuestion.answers_en.map((answer, index) => (
-
             <div key={index}>
               <label>
                 <input
@@ -106,7 +117,6 @@ export default function Questions() {
                 {answer.answer_text}
               </label>
             </div>
-
           ))
         ) : (
           <input
